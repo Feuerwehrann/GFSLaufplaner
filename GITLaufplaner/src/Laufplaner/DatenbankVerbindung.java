@@ -20,8 +20,10 @@ public class DatenbankVerbindung {
         Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
         //PC Zuhause: 	"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb"
         //Laptop:		"jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
-        //Schule
-        connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+        //Schule		"jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
+        
+      
+        connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
     
         
      
@@ -82,7 +84,7 @@ public class DatenbankVerbindung {
         PreparedStatement pstmt = null;
         try {
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-            connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+            connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
 
             LocalDate currentDate = LocalDate.now();
             java.sql.Date date = java.sql.Date.valueOf(currentDate);
@@ -115,7 +117,7 @@ public class DatenbankVerbindung {
         PreparedStatement pstmt = null;
         try {
             Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-            connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+            connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
 
             LocalDate currentDate = LocalDate.now();
             java.sql.Date date = java.sql.Date.valueOf(currentDate);

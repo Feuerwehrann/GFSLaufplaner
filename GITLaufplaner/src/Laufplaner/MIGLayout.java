@@ -85,6 +85,7 @@ public class MIGLayout  {
 		final JLabel zielL2 = new JLabel ("Trage dein neues Ziel in min/km ein!");
 		
 		JLabel laeufe1 = new JLabel ("<html><body><h1>Ziel</h1><br>hallo</body></html>");
+		JButton letzteEintraege = new JButton ("letzten Lauf laden");
 
 		
 
@@ -103,6 +104,7 @@ public class MIGLayout  {
 		panZiel.add(neuesZielB1,"center, wrap");
 		panVorschlaege.add(labelVorschlaege);
 		panLetzteEintraege.add(laeufe1, "center, wrap");
+		panLetzteEintraege.add(letzteEintraege, "center, wrap");
 		
 	
 
