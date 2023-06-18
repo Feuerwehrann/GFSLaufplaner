@@ -18,6 +18,11 @@ public class DatenbankVerbindung {
     try {
         // Verbindung zur Datenbank herstellen
         Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+        //PC Zuhause: 	"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb"
+        //Laptop:		"jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
+        //Schule		"jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
+        
+      
         connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb");
     
         
@@ -38,6 +43,21 @@ public class DatenbankVerbindung {
             System.out.println(id + ", " + km + ", " + zeit + ", " + datum+ ", "+ pace);
           
         }
+        System.out.println("--------------------");
+      
+        String sqlLetzte = "SELECT *  FROM Eintraege ORDER BY IdLauf DESC LIMIT 10;";
+        Statement statementLetzte = connection.createStatement();
+        ResultSet resultLetzte = statementLetzte.executeQuery(sqlLetzte);
+        
+        while (resultLetzte.next()) {
+        	int idLetzte = resultLetzte.getInt("IdLauf");
+        	double kmLetzte = resultLetzte.getDouble("Kilometer");
+        	double zeitLetzte = resultLetzte.getDouble("Zeit");
+        	Date datumLetzte = resultLetzte.getDate("Datum");
+        	double paceLetzte = zeitLetzte/kmLetzte;
+        	System.out.println(idLetzte + ", " + kmLetzte + ", " + zeitLetzte + ", " + datumLetzte+ ", "+ paceLetzte);
+        }
+        
         
         String sqlZiel = "SELECT * FROM Ziel";
         Statement statementZiel = connection.createStatement();

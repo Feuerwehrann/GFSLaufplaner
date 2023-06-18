@@ -1,6 +1,8 @@
 package Laufplaner;
 
-// Importieren von allen benötigten Bibliotheken
+/** 
+ * Importieren von allen benötigten Bibliotheken
+ */
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.BorderFactory;
@@ -17,8 +19,11 @@ import java.sql.Date;
 import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 
-
+    
 public class MIGLayout  {
+	/**
+	 * Initialisierung aller benötigten Variablen
+	 */
 	double ziel;
 	int clickZiel = 0;
 	static int laufID;
@@ -52,8 +57,8 @@ public class MIGLayout  {
 		// Erstellung der einzelnen Panels mit JLabels
 		JPanel panLetzteEintraege = new JPanel(new MigLayout("center"));
 		JPanel panZeit = new JPanel(new MigLayout("center"));
-		JPanel panNeuerEintrag = new JPanel(new MigLayout("center"));
-		JPanel panZiel = new JPanel(new MigLayout("center"));
+		final JPanel panNeuerEintrag = new JPanel(new MigLayout("center"));
+		final JPanel panZiel = new JPanel(new MigLayout("center"));
 		JPanel panVorschlaege = new JPanel(new MigLayout("center"));
 		
 		panLetzteEintraege.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -74,17 +79,18 @@ public class MIGLayout  {
 		
 		JLabel neuerEintragL1 = new JLabel("Bitte tragen Sie Ihren Lauf von heute ein!");
 		JLabel neuerEintragL2 = new JLabel("<html><body><h3>gelaufene Strecke in Kilomter</h3></body></html>");
-		PositiveDecimalField neuerEintragTF1 = new PositiveDecimalField();
-		JLabel neuerEintragL3 = new JLabel("<html><body><h3>benötigte Zeit in Minuten</h3></body></html>");
-		PositiveDecimalField neuerEintragTF2 = new PositiveDecimalField();
+		final PositiveDecimalField neuerEintragTF1 = new PositiveDecimalField();
+		JLabel neuerEintragL3 = new JLabel("<html><body><h3>ben�tigte Zeit in Minuten</h3></body></html>");
+		final PositiveDecimalField neuerEintragTF2 = new PositiveDecimalField();
 		JButton neuerEintragB1 = new JButton ("<html><body><h3>eintragen</h3></body></html>");
-		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugefügt!");
-		JLabel zielL1 = new JLabel("Dein aktuelles Ziel lautet "+zielpace+" min/km");
-		JButton neuesZielB1 = new JButton ("Neues Ziel");
-		PositiveDecimalField neuesZielTF1 = new PositiveDecimalField();
-		JLabel zielL2 = new JLabel ("Trage dein neues Ziel in min/km ein!");
+		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugef�gt!");
+		final JLabel zielL1 = new JLabel("Dein aktuelles Ziel lautet "+zielpace+" min/km");
+		final JButton neuesZielB1 = new JButton ("Neues Ziel");
+		final PositiveDecimalField neuesZielTF1 = new PositiveDecimalField();
+		final JLabel zielL2 = new JLabel ("Trage dein neues Ziel in min/km ein!");
 		
 		JLabel laeufe1 = new JLabel ("<html><body><h1>Ziel</h1><br>hallo</body></html>");
+		JButton letzteEintraege = new JButton ("letzten Lauf laden");
 
 		
 
@@ -103,6 +109,7 @@ public class MIGLayout  {
 		panZiel.add(neuesZielB1,"center, wrap");
 		panVorschlaege.add(labelVorschlaege);
 		panLetzteEintraege.add(laeufe1, "center, wrap");
+		panLetzteEintraege.add(letzteEintraege, "center, wrap");
 		
 	
 
@@ -151,6 +158,14 @@ public class MIGLayout  {
 		    }
 		});
 		
+		letzteEintraege.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
 		
 		            	
 		            	
