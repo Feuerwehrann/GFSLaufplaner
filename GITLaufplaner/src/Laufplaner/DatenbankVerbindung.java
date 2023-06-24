@@ -8,25 +8,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+/**
+ * Klasse um die Datenbank zu verbinden
+ * @author Ann Manegold
+ *
+ */
 
 public class DatenbankVerbindung {
 	
+	/**
+	 * Methode um Verbindung zur Datenbank herzustellen
+	 */
 	public static void verbinden() {
 		Connection connection = null;
 	
 	
     try {
-        // Verbindung zur Datenbank herstellen
+        /**
+         * Verbindung zur Datenbakn herstellen
+         */
         Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
         //PC Zuhause: 	"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb"
         //Laptop:		"jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
         //Schule		"jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
         
+        /**
+         * Verbindungs URL, je nach dem wo die Datenbank gespeichert wird
+         */
       
         connection = DriverManager.getConnection("jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb");
     
         
      
+        /**
+         * Auslesen der Daten aus der Tabelle "Einträge" und ausgeben aller Daten
+         */
         String sql = "SELECT * FROM Eintraege";
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(sql);
@@ -45,6 +61,9 @@ public class DatenbankVerbindung {
         }
         System.out.println("--------------------");
       
+        /**
+         * Auslesen der letzten 10 Daten aus der Tabelle "Einträge"
+         */
         String sqlLetzte = "SELECT *  FROM Eintraege ORDER BY IdLauf DESC LIMIT 10;";
         Statement statementLetzte = connection.createStatement();
         ResultSet resultLetzte = statementLetzte.executeQuery(sqlLetzte);
@@ -59,6 +78,9 @@ public class DatenbankVerbindung {
         }
         
         
+        /**
+         * Auslesen der letzten Daten aus der Tabelle "Ziel"
+         */
         String sqlZiel = "SELECT * FROM Ziel";
         Statement statementZiel = connection.createStatement();
         ResultSet resultZiel = statementZiel.executeQuery(sqlZiel);
@@ -81,7 +103,9 @@ public class DatenbankVerbindung {
     } catch (ClassNotFoundException e) {
         e.printStackTrace();
     } finally {
-        // Verbindung zur Datenbank schließen
+        /**
+         * Verbindung zur Datenbank schließen
+         */
         try {
             if (connection != null) {
                 connection.close();
@@ -93,6 +117,11 @@ public class DatenbankVerbindung {
 
 
 }
+	/**
+	 * Methode zum Einfügen eines neuen Laufs in die Datenbank
+	 * @param km gelaufene kilometer
+	 * @param zeit die benötigte Zeit
+	 */
 	
 	public static void insertLetzterLaufInDatabase(double km, double zeit) {
         Connection connection = null;
@@ -127,6 +156,10 @@ public class DatenbankVerbindung {
         }
     }
 	
+	/**
+	 * Methode zum einfügen eines Ziels in die Datenbank
+	 * @param ziel das eingestellte Ziel
+	 */
 	public static void insertZielInDatabase(double ziel) {
         Connection connection = null;
         PreparedStatement pstmt = null;
