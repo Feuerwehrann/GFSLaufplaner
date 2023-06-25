@@ -1,6 +1,9 @@
 package Laufplaner;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+
+import javax.swing.JPanel;
 /**
  * Startklasse
  * @author Ann Manegold
@@ -21,6 +24,7 @@ public class Startklasse {
             @Override
             public void run() {
                 new MIGLayout();
+
             }
         });
     }

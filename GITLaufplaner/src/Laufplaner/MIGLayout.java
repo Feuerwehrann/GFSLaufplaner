@@ -16,11 +16,17 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.*;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.*;
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +85,7 @@ public class MIGLayout {
 		 * Erstellung der einzelnen Panels mit JLabels
 		 */
 		JPanel panLetzteEintraege = new JPanel(new MigLayout("center"));
-		JPanel panZeit = new JPanel(new MigLayout("center"));
+		final JPanel panZeit = new JPanel(new MigLayout("center"));
 		final JPanel panNeuerEintrag = new JPanel(new MigLayout("center"));
 		final JPanel panZiel = new JPanel(new MigLayout("center"));
 		JPanel panVorschlaege = new JPanel(new MigLayout("center"));
@@ -138,6 +144,7 @@ public class MIGLayout {
 		panZiel.add(neuesZielB1, "center, wrap");
 		panVorschlaege.add(labelVorschlaege);
 		panLetzteEintraege.add(laeufe1, "center, wrap");
+		panZeit.add(createChartPanel(), "w 100%, h 60sp, span 3");
 
 
 		/**
@@ -288,4 +295,48 @@ public class MIGLayout {
 		zielpace = ziel;
 
 	}
+	
+private static final String DB_URL = "jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb";
+    
+  
+
+    private JPanel createChartPanel() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            String sql = "SELECT * FROM Eintraege ORDER BY IdLauf DESC LIMIT 15;";
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+
+            while (result.next()) {
+                int id = result.getInt("IdLauf");
+                double km = result.getDouble("Kilometer");
+                double zeit = result.getDouble("Zeit");
+                Date datum = result.getDate("Datum");
+                double pace = zeit / km;
+
+                dataset.addValue(pace, "Pace (min/km)", datum.toLocalDate().toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Letzte Läufe", "Datum", "Pace (min/km)", dataset,
+                PlotOrientation.VERTICAL, false, true, false);
+
+        chart.setBackgroundPaint(Color.WHITE);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinePaint(Color.BLACK);
+
+        ChartPanel chartPanel = new ChartPanel(chart);
+       
+       
+        return chartPanel;
+    }
+
+ 
 }
+
