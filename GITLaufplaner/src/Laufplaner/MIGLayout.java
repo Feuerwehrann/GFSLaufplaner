@@ -19,6 +19,11 @@ import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
+import org.jfree.chart.*;
+import org.jfree.chart.plot.*;
+import org.jfree.data.xy.*;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Klasse MIGLayout
