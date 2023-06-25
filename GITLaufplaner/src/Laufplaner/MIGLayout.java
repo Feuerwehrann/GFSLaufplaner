@@ -22,6 +22,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * Klasse MIGLayout
+ * 
  * @author Ann Manegold
  *
  */
@@ -30,6 +31,8 @@ public class MIGLayout {
 	/**
 	 * Initialisierung aller benötigten Variablen
 	 */
+	private static JLabel laeufe1 = new JLabel(" ");
+	public static String letzteEintraege;
 	double ziel;
 	int clickZiel = 0;
 	static int laufID;
@@ -102,14 +105,16 @@ public class MIGLayout {
 		JLabel neuerEintragL3 = new JLabel("<html><body><h3>ben�tigte Zeit in Minuten</h3></body></html>");
 		final PositiveDecimalField neuerEintragTF2 = new PositiveDecimalField();
 		JButton neuerEintragB1 = new JButton("<html><body><h3>eintragen</h3></body></html>");
-		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugef�gt!");
+		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugefuegt!");
 		final JLabel zielL1 = new JLabel("Dein aktuelles Ziel lautet " + zielpace + " min/km");
 		final JButton neuesZielB1 = new JButton("Neues Ziel");
 		final PositiveDecimalField neuesZielTF1 = new PositiveDecimalField();
 		final JLabel zielL2 = new JLabel("Trage dein neues Ziel in min/km ein!");
 
-		JLabel laeufe1 = new JLabel("<html><body><h1>Ziel</h1><br>hallo</body></html>");
 		JButton letzteEintraege = new JButton("letzten Lauf laden");
+		
+		final JLabel zielErreicht = new JLabel ("Das Ziel wurde erreciht! Herzlichen Glueckwunsch!");
+		zielErreicht.setForeground(Color.red);
 
 		/**
 		 * Hinzufügen der Label zu den einzelnen Panels
@@ -128,7 +133,7 @@ public class MIGLayout {
 		panZiel.add(neuesZielB1, "center, wrap");
 		panVorschlaege.add(labelVorschlaege);
 		panLetzteEintraege.add(laeufe1, "center, wrap");
-		panLetzteEintraege.add(letzteEintraege, "center, wrap");
+
 
 		/**
 		 * Hinzufügen der Panel zum Hauptpanel
@@ -170,7 +175,7 @@ public class MIGLayout {
 						double kilometer = (Double.parseDouble(neuerEintragTF1.getText()));
 						double zeit = (Double.parseDouble(neuerEintragTF2.getText()));
 						DatenbankVerbindung.insertLetzterLaufInDatabase(kilometer, zeit);
-
+						laeufe1.getParent().removeAll();
 						/**
 						 * hinzufügen der Daten zur Datenbank
 						 */
@@ -180,6 +185,9 @@ public class MIGLayout {
 						neuerEintragTF2.setText(null);
 						DatenbankVerbindung.verbinden();
 						panNeuerEintrag.revalidate();
+						if ((zeit / kilometer)<=zielpace) {
+							panZiel.add(zielErreicht);
+						}
 
 					}
 				});
@@ -234,13 +242,26 @@ public class MIGLayout {
 		});
 
 	}
+
+	public static void LetzteLaufe(String eintrag) {
+	    if (letzteEintraege == null) {
+	        letzteEintraege = "";
+	    } else {
+	        letzteEintraege += "<br>";
+	    }
+	    letzteEintraege += eintrag;
+
+	    laeufe1.setText("<html><body>" + letzteEintraege + "</body></html>");
+	}
+
 	/**
 	 * Methode zum uebergeben der Daten der letzten Läufe
-	 * @param id id des Laufes
-	 * @param km kilometer des Laufes
-	 * @param zeit Zeit des Laufes
+	 * 
+	 * @param id    id des Laufes
+	 * @param km    kilometer des Laufes
+	 * @param zeit  Zeit des Laufes
 	 * @param datum Datum des Laufes
-	 * @param pace Pace des Laufes
+	 * @param pace  Pace des Laufes
 	 */
 
 	public static void ausgabeLetzteLaufe(int id, double km, double zeit, Date datum, double pace) {
@@ -251,8 +272,10 @@ public class MIGLayout {
 		laufdatum = datum;
 
 	}
+
 	/**
-	 * Methode zum uebergeben des Ziel 
+	 * Methode zum uebergeben des Ziel
+	 * 
 	 * @param ziel aktuelles ziel
 	 */
 
