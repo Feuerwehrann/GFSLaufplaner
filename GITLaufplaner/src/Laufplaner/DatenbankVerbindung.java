@@ -17,6 +17,7 @@ import java.time.LocalDate;
  */
 
 public class DatenbankVerbindung {
+	
 
 	/**
 	 * Methode um Verbindung zur Datenbank herzustellen
@@ -35,13 +36,13 @@ public class DatenbankVerbindung {
 			// "jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
 			// Schule
 			// "jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
-
+			//Laptop Helen: "jdbc:ucanaccess//C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
 			/**
 			 * Verbindungs URL, je nach dem wo die Datenbank gespeichert wird
 			 */
 
 			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb");
+					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
 
 			/**
 			 * Auslesen der Daten aus der Tabelle "Einträge" und ausgeben aller Daten
@@ -130,7 +131,7 @@ public class DatenbankVerbindung {
 		try {
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb");
+					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
 
 			LocalDate currentDate = LocalDate.now();
 			java.sql.Date date = java.sql.Date.valueOf(currentDate);
@@ -169,7 +170,8 @@ public class DatenbankVerbindung {
 		try {
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb");
+					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+
 
 			LocalDate currentDate = LocalDate.now();
 			java.sql.Date date = java.sql.Date.valueOf(currentDate);

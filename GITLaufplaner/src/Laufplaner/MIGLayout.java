@@ -296,7 +296,7 @@ public class MIGLayout {
 
 	}
 	
-private static final String DB_URL = "jdbc:ucanaccess://C:\\Users\\Ann Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb";
+private static final String DB_URL =  "jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb";
     
   
 
