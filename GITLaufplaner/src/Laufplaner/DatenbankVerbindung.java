@@ -61,7 +61,6 @@ public class DatenbankVerbindung implements Variablen {
 
 			while (resultVorschlag.next()) {
 				int idVorschlaege = resultVorschlag.getInt("ID");
-				int kategorieVorschlag = resultVorschlag.getInt("Kategorie");
 				String beschreibungVorschlag = resultVorschlag.getString("Beschreibung");
 				vorschlaegeArray[idVorschlaege] = beschreibungVorschlag;
 

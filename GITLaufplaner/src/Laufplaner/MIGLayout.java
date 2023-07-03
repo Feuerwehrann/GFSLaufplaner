@@ -1,26 +1,17 @@
 package Laufplaner;
 
-/**
- * Importieren von allen benötigten Bibliotheken
- */
-
-import java.awt.BorderLayout;
-import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
@@ -29,12 +20,13 @@ import org.jfree.chart.*;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.*;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.xy.*;
-import javax.swing.*;
+/**
+ * Importieren von allen benötigten Bibliotheken
+ */
 import java.awt.*;
 
 /**
@@ -60,7 +52,6 @@ public class MIGLayout implements Variablen {
 	static double zielpace;
 
 	private JFrame frame;
-	private JPanel panel;
 
 	/**
 	 * Konstruktor des MigLayouts
@@ -86,11 +77,10 @@ public class MIGLayout implements Variablen {
 		 */
 		JPanel panel = new JPanel(new MigLayout());
 
-
 		/**
 		 * Erstellung der einzelnen Panels mit JLabels
 		 */
-		JPanel panLetzteEintraege = new JPanel(new MigLayout("center"));
+		final JPanel panLetzteEintraege = new JPanel(new MigLayout("center"));
 		final JPanel panZeit = new JPanel(new MigLayout("center"));
 		final JPanel panNeuerEintrag = new JPanel(new MigLayout("center"));
 		final JPanel panZiel = new JPanel(new MigLayout("center"));
@@ -112,7 +102,7 @@ public class MIGLayout implements Variablen {
 		/**
 		 * Erstellung der JLabels und JButtons und Beschriftung
 		 */
-		JLabel labelLetzteEintraege = new JLabel("<html><body><h1>Letzte Einträge</h1></body></html>");
+		final JLabel labelLetzteEintraege = new JLabel("<html><body><h1>Letzte Einträge</h1></body></html>");
 		JLabel labelZiel = new JLabel("<html><body><h1>Ziel</h1></body></html>");
 		JLabel labelneuerEintrag = new JLabel("<html><body><h1>neuer Eintrag<h1></body></html>");
 		JLabel labelVorschlaege = new JLabel("<html><body><h1>Vorschlaege</h1></body></html>");
@@ -138,6 +128,8 @@ public class MIGLayout implements Variablen {
 		JLabel erklaerungen5 = new JLabel("Dehnen: Nach dem Einlaufen auf jeden Fall dehnen");
 		JLabel erklaerungen6 = new JLabel("Stabis: Regelmäßig Stabilisationsübungen durchführen");
 		JLabel erklaerungen7 = new JLabel("Kraft: Regelmäßig Kraftübungen durvhführen");
+		JLabel erklaerungen8 = new JLabel(
+				"Fahrtspiel: Lockerer Dauerlauf, dabei sucht man sich ein Ziel, zum Beispiel den nächsten Baum und sprintet dann bis dahin");
 
 		final JLabel zielErreicht = new JLabel("Das Ziel wurde erreicht! Herzlichen Glueckwunsch!");
 		zielErreicht.setForeground(Color.red);
@@ -150,11 +142,11 @@ public class MIGLayout implements Variablen {
 		JButton btVorschlaege1 = new JButton("Vorschlag anzeigen");
 		final JLabel vorschlaege3 = new JLabel("");
 
-		JLabel letzteTitel = new JLabel ("ID|Kilometer|Zeit|Strecke|Datum|pace");
+		final JLabel letzteTitel = new JLabel("ID|Kilometer|Zeit|Strecke|Datum|pace");
 		/**
 		 * Hinzufügen der Label zu den einzelnen Panels
 		 */
-		
+
 		panLetzteEintraege.add(labelLetzteEintraege, "center, wrap");
 		panLetzteEintraege.add(letzteTitel, "center, wrap");
 		panNeuerEintrag.add(labelneuerEintrag, "center, wrap");
@@ -169,12 +161,14 @@ public class MIGLayout implements Variablen {
 		panZiel.add(neuesZielB1, "center, wrap");
 		panVorschlaegeFragen.add(labelVorschlaege, "center, wrap");
 		panLetzteEintraege.add(laeufe1, "center, wrap");
+		
 		panZeit.add(DiagramErstellen(), "w 100%, h 60sp, span 3");
 		panErklaerungen.add(labelErklaerungen, "center, wrap");
 		panErklaerungen.add(erklaerungen1, "center, wrap");
 		panErklaerungen.add(erklaerungen2, "center, wrap");
 		panErklaerungen.add(erklaerungen3, "center, wrap");
 		panErklaerungen.add(erklaerungen4, "center, wrap");
+		panErklaerungen.add(erklaerungen8, "center, wrap");
 		panErklaerungen.add(erklaerungen5, "center, wrap");
 		panErklaerungen.add(erklaerungen6, "center, wrap");
 		panErklaerungen.add(erklaerungen7, "center, wrap");
@@ -229,10 +223,9 @@ public class MIGLayout implements Variablen {
 						double schlaf = (Double.parseDouble(tfVorschlaege1.getText()));
 						double energie = (Double.parseDouble(tfVorschlaege2.getText()));
 						double energieWert = ((int) ((schlaf + energie) + 0.5));
-				
+
 						String vorschlag = DatenbankVerbindung.laufVorschlagen(energieWert);
-						vorschlaege3.setText (vorschlag);
-						
+						vorschlaege3.setText(vorschlag);
 
 					}
 				});
@@ -256,18 +249,27 @@ public class MIGLayout implements Variablen {
 						 */
 						JLabel neuerEintragPace = new JLabel("Deine pace lautet: " + zeit / kilometer + " min/km");
 						panNeuerEintrag.add(neuerEintragPace, "center, wrap");
-						DiagramErstellen();
-						neuerEintragTF1.setText(null);
-						neuerEintragTF2.setText(" ");
+
 						neuerEintragTF1.revalidate();
 						neuerEintragTF1.repaint();
-						
+						panZeit.removeAll();
+						panZeit.revalidate();
+						panZeit.repaint();
+						panZeit.add(DiagramErstellen(), "w 100%, h 60sp, span 3");
+						panZeit.revalidate();
+						panZeit.repaint();
 
 						panNeuerEintrag.revalidate();
 						if ((zeit / kilometer) <= zielpace) {
 							panZiel.add(zielErreicht);
 						}
 
+						laeufe1.setText(null);
+						letzteEintraege = " ";
+						DatenbankVerbindung.verbinden();
+						panLetzteEintraege.add(labelLetzteEintraege, "center, wrap");
+						panLetzteEintraege.add(letzteTitel, "center, wrap");
+						panLetzteEintraege.add(laeufe1, "Center, wrap");
 					}
 				});
 			}
@@ -313,14 +315,14 @@ public class MIGLayout implements Variablen {
 	}
 
 	public static void LetzteLaufe(String eintrag) {
-		
+
 		if (letzteEintraege == null) {
 			letzteEintraege = "";
 		} else {
 			letzteEintraege += "<br>";
 		}
 		letzteEintraege += eintrag;
-		
+
 		laeufe1.setText("<html><body>" + letzteEintraege + "</body></html>");
 	}
 
@@ -364,7 +366,7 @@ public class MIGLayout implements Variablen {
 	        Connection conn = DriverManager.getConnection(URL);
 
 	        // SQL-Abfrage ausführen, um die Einträge abzurufen
-	        String query = "SELECT * FROM Eintraege";
+	        String query = "SELECT * FROM Eintraege ORDER BY IdLauf ASC";
 	        Statement stmt = conn.createStatement();
 	        ResultSet rs = stmt.executeQuery(query);
 
@@ -386,6 +388,7 @@ public class MIGLayout implements Variablen {
 	            double pace = zeit / km;
 	            Day day = new Day(date);
 	            
+	            System.out.println("Datum: "+dateString +"Zeit: "+ zeit + "Kilometer: "+ km);	            
 	            paceSeries.addOrUpdate(day, pace);
 	            distanceSeries.addOrUpdate(day, km);
 	        }
@@ -416,15 +419,14 @@ public class MIGLayout implements Variablen {
 	    // Anpassung der Achsen
 	    XYPlot plot = (XYPlot) chart.getPlot();
 	    DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
-	    dateAxis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+	    dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
 	    NumberAxis paceAxis = (NumberAxis) plot.getRangeAxis();
-	    paceAxis.setAutoRangeIncludesZero(false);
+	    paceAxis.setAutoRangeIncludesZero(true);
 
 	    // Erstellung des ChartPanels zur Anzeige des Diagramms
 	    ChartPanel chartPanel = new ChartPanel(chart);
 
 	    return chartPanel;
 	}
-
 
 }
