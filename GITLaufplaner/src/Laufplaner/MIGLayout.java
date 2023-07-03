@@ -127,7 +127,7 @@ public class MIGLayout implements Variablen {
 				"In and Outs: Läufe auf der 400 Meter Bahn, 50 Meter langsam, 50 Meter schnell");
 		JLabel erklaerungen5 = new JLabel("Dehnen: Nach dem Einlaufen auf jeden Fall dehnen");
 		JLabel erklaerungen6 = new JLabel("Stabis: Regelmäßig Stabilisationsübungen durchführen");
-		JLabel erklaerungen7 = new JLabel("Kraft: Regelmäßig Kraftübungen durvhführen");
+		JLabel erklaerungen7 = new JLabel("Kraft: Regelmäßig Kraftübungen durchführen");
 		JLabel erklaerungen8 = new JLabel(
 				"Fahrtspiel: Lockerer Dauerlauf, dabei sucht man sich ein Ziel, zum Beispiel den nächsten Baum und sprintet dann bis dahin");
 
@@ -142,7 +142,7 @@ public class MIGLayout implements Variablen {
 		JButton btVorschlaege1 = new JButton("Vorschlag anzeigen");
 		final JLabel vorschlaege3 = new JLabel("");
 
-		final JLabel letzteTitel = new JLabel("ID|Kilometer|Zeit|Strecke|Datum|pace");
+		final JLabel letzteTitel = new JLabel("ID | Kilometer | Zeit | Datum | pace");
 		/**
 		 * Hinzufügen der Label zu den einzelnen Panels
 		 */
@@ -161,7 +161,7 @@ public class MIGLayout implements Variablen {
 		panZiel.add(neuesZielB1, "center, wrap");
 		panVorschlaegeFragen.add(labelVorschlaege, "center, wrap");
 		panLetzteEintraege.add(laeufe1, "center, wrap");
-		
+
 		panZeit.add(DiagramErstellen(), "w 100%, h 60sp, span 3");
 		panErklaerungen.add(labelErklaerungen, "center, wrap");
 		panErklaerungen.add(erklaerungen1, "center, wrap");
@@ -357,29 +357,19 @@ public class MIGLayout implements Variablen {
 	}
 
 	public JComponent DiagramErstellen() {
-	    // Erstellung der Zeitreihen-Dataset
 	    TimeSeriesCollection dataset = new TimeSeriesCollection();
 
 	    try {
-	        // Verbindung zur Access-Datenbank herstellen
-	       
 	        Connection conn = DriverManager.getConnection(URL);
-
-	        // SQL-Abfrage ausführen, um die Einträge abzurufen
-	        String query = "SELECT * FROM Eintraege ORDER BY IdLauf ASC";
+	        String query = "SELECT TOP 10 * FROM Eintraege ORDER BY Datum DESC;";
 	        Statement stmt = conn.createStatement();
 	        ResultSet rs = stmt.executeQuery(query);
 
-	        // Zeitformat für die Achse
 	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	        // Erstellung der Zeitreihe für den Pace
 	        TimeSeries paceSeries = new TimeSeries("Pace");
-
-	        // Erstellung der Zeitreihe für die Strecke
 	        TimeSeries distanceSeries = new TimeSeries("Strecke");
 
-	        // Daten aus der Abfrage dem Dataset hinzufügen
 	        while (rs.next()) {
 	            double km = rs.getDouble("Kilometer");
 	            double zeit = rs.getDouble("Zeit");
@@ -387,17 +377,14 @@ public class MIGLayout implements Variablen {
 	            java.util.Date date = dateFormat.parse(dateString);
 	            double pace = zeit / km;
 	            Day day = new Day(date);
-	            
-	            System.out.println("Datum: "+dateString +"Zeit: "+ zeit + "Kilometer: "+ km);	            
+	            System.out.println("Datum: " + dateString + ", Pace: " + pace + ", Strecke: " + km);
 	            paceSeries.addOrUpdate(day, pace);
 	            distanceSeries.addOrUpdate(day, km);
 	        }
 
-	        // Hinzufügen der Zeitreihen zum Dataset
 	        dataset.addSeries(paceSeries);
 	        dataset.addSeries(distanceSeries);
 
-	        // Verbindung schließen
 	        rs.close();
 	        stmt.close();
 	        conn.close();
@@ -405,27 +392,25 @@ public class MIGLayout implements Variablen {
 	        e.printStackTrace();
 	    }
 
-	    // Erstellung des Diagramms
-	    JFreeChart chart = ChartFactory.createTimeSeriesChart(
-	            "Pace- und Streckenverlauf",
-	            "Datum",
-	            "Pace (Min/km) / Strecke (km)",
-	            dataset,
-	            true,
-	            true,
-	            false
-	    );
-
-	    // Anpassung der Achsen
+	    JFreeChart chart = ChartFactory.createTimeSeriesChart("Pace- und Streckenverlauf", "Datum",
+	            "Pace (Min/km) / Strecke (km)", dataset, true, true, false);
 	    XYPlot plot = (XYPlot) chart.getPlot();
+	    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+	    renderer.setSeriesPaint(0, Color.RED);
+	    renderer.setSeriesPaint(1, Color.BLUE);
+	    renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+	    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+	    renderer.setSeriesLinesVisible(0, true);
+	    renderer.setSeriesLinesVisible(1, true);
+
+	    plot.setRenderer(renderer);
+
 	    DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
 	    dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
 	    NumberAxis paceAxis = (NumberAxis) plot.getRangeAxis();
-	    paceAxis.setAutoRangeIncludesZero(true);
+	    paceAxis.setAutoRangeIncludesZero(false);
 
-	    // Erstellung des ChartPanels zur Anzeige des Diagramms
 	    ChartPanel chartPanel = new ChartPanel(chart);
-
 	    return chartPanel;
 	}
 
