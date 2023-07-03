@@ -16,33 +16,27 @@ import java.time.LocalDate;
  *
  */
 
-public class DatenbankVerbindung {
-	
+public class DatenbankVerbindung implements Variablen {
+	public static String vorschlaegeArray[] = new String[30];
 
 	/**
 	 * Methode um Verbindung zur Datenbank herzustellen
 	 */
 	public static void verbinden() {
 		Connection connection = null;
+		String letzteLaeufe = "";
 
 		try {
 			/**
 			 * Verbindung zur Datenbakn herstellen
 			 */
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-			// PC Zuhause: "jdbc:ucanaccess://C:\\Users\\Ann
-			// Manegold\\git\\laufplanerGFS\\GFS\\LaufplanerDatabase.accdb"
-			// Laptop:
-			// "jdbc:ucanaccess://C:\\Users\\und\\OneDrive\\Desktop\\GITLaufplaner\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
-			// Schule
-			// "jdbc:ucanaccess://C:\\Users\\a.manegold.AD.000\\Desktop\\LaufplanerGit\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
-			//Laptop Helen: "jdbc:ucanaccess//C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb"
+
 			/**
 			 * Verbindungs URL, je nach dem wo die Datenbank gespeichert wird
 			 */
 
-			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+			connection = DriverManager.getConnection(URL);
 
 			/**
 			 * Auslesen der Daten aus der Tabelle "Einträge" und ausgeben aller Daten
@@ -61,6 +55,21 @@ public class DatenbankVerbindung {
 				System.out.println(id + ", " + km + ", " + zeit + ", " + datum + ", " + pace);
 
 			}
+			String sqlVorschlag = "SELECT * FROM Vorschlaege";
+			Statement statementVorschlag = connection.createStatement();
+			ResultSet resultVorschlag = statementVorschlag.executeQuery(sqlVorschlag);
+
+			while (resultVorschlag.next()) {
+				int idVorschlaege = resultVorschlag.getInt("ID");
+				int kategorieVorschlag = resultVorschlag.getInt("Kategorie");
+				String beschreibungVorschlag = resultVorschlag.getString("Beschreibung");
+				vorschlaegeArray[idVorschlaege] = beschreibungVorschlag;
+
+			}
+			for (int i = 1; i < 22; i++) {
+				System.out.println(vorschlaegeArray[i]);
+			}
+
 			System.out.println("--------------------");
 
 			/**
@@ -69,7 +78,7 @@ public class DatenbankVerbindung {
 			String sqlLetzte = "SELECT *  FROM Eintraege ORDER BY IdLauf DESC ;";
 			Statement statementLetzte = connection.createStatement();
 			ResultSet resultLetzte = statementLetzte.executeQuery(sqlLetzte);
-			String letzteLaeufe;
+			
 
 			while (resultLetzte.next()) {
 
@@ -78,7 +87,8 @@ public class DatenbankVerbindung {
 				double zeitLetzte = resultLetzte.getDouble("Zeit");
 				Date datumLetzte = resultLetzte.getDate("Datum");
 				double paceLetzte = zeitLetzte / kmLetzte;
-				letzteLaeufe = String.format("%d\t| %.2f\t| %.2f\t| %s\t| %.2f", idLetzte, kmLetzte, zeitLetzte, datumLetzte, paceLetzte);
+				letzteLaeufe = String.format("%d\t| %.2f\t| %.2f\t| %s\t| %.2f", idLetzte, kmLetzte, zeitLetzte,
+						datumLetzte, paceLetzte);
 				MIGLayout.LetzteLaufe(letzteLaeufe);
 				System.out.println(
 						idLetzte + ", " + kmLetzte + ", " + zeitLetzte + ", " + datumLetzte + ", " + paceLetzte);
@@ -126,12 +136,12 @@ public class DatenbankVerbindung {
 	 */
 
 	public static void insertLetzterLaufInDatabase(double km, double zeit) {
+
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		try {
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
+			connection = DriverManager.getConnection(URL);
 
 			LocalDate currentDate = LocalDate.now();
 			java.sql.Date date = java.sql.Date.valueOf(currentDate);
@@ -159,6 +169,13 @@ public class DatenbankVerbindung {
 		}
 	}
 
+	public static String laufVorschlagen(double energieWert) {
+		String Vorschlag = null;
+		Vorschlag = vorschlaegeArray[(int) energieWert];
+		return Vorschlag;
+
+	}
+
 	/**
 	 * Methode zum einfügen eines Ziels in die Datenbank
 	 * 
@@ -169,12 +186,7 @@ public class DatenbankVerbindung {
 		PreparedStatement pstmt = null;
 		try {
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-			connection = DriverManager.getConnection(
-					"jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb");
-
-
-			LocalDate currentDate = LocalDate.now();
-			java.sql.Date date = java.sql.Date.valueOf(currentDate);
+			connection = DriverManager.getConnection(URL);
 
 			pstmt = connection.prepareStatement("INSERT INTO Ziel (Zielpace) VALUES (?)");
 			pstmt.setDouble(1, ziel);

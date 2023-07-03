@@ -38,7 +38,7 @@ import java.awt.*;
  *
  */
 
-public class MIGLayout {
+public class MIGLayout implements Variablen {
 	/**
 	 * Initialisierung aller benötigten Variablen
 	 */
@@ -89,6 +89,8 @@ public class MIGLayout {
 		final JPanel panNeuerEintrag = new JPanel(new MigLayout("center"));
 		final JPanel panZiel = new JPanel(new MigLayout("center"));
 		JPanel panVorschlaege = new JPanel(new MigLayout("center"));
+		JPanel panErklaerungen = new JPanel(new MigLayout("Center"));
+		JPanel panVorschlaegeFragen = new JPanel(new MigLayout("center"));
 
 		/**
 		 * Anpassung der Panels Schwarzer Rand
@@ -108,12 +110,13 @@ public class MIGLayout {
 		JLabel labelZeit = new JLabel("Zeit");
 		JLabel labelZiel = new JLabel("<html><body><h1>Ziel</h1></body></html>");
 		JLabel labelneuerEintrag = new JLabel("<html><body><h1>neuer Eintrag<h1></body></html>");
-		JLabel labelVorschlaege = new JLabel("Vorschläge");
+		JLabel labelVorschlaege = new JLabel("<html><body><h1>Vorschlaege</h1></body></html>");
+		JLabel labelErklaerungen = new JLabel("<html><body><h1>Erklaerungen</h1></body></html>");
 
 		JLabel neuerEintragL1 = new JLabel("Bitte tragen Sie Ihren Lauf von heute ein!");
 		JLabel neuerEintragL2 = new JLabel("<html><body><h3>gelaufene Strecke in Kilomter</h3></body></html>");
 		final PositiveDecimalField neuerEintragTF1 = new PositiveDecimalField();
-		JLabel neuerEintragL3 = new JLabel("<html><body><h3>ben�tigte Zeit in Minuten</h3></body></html>");
+		JLabel neuerEintragL3 = new JLabel("<html><body><h3>benoetigte Zeit in Minuten</h3></body></html>");
 		final PositiveDecimalField neuerEintragTF2 = new PositiveDecimalField();
 		JButton neuerEintragB1 = new JButton("<html><body><h3>eintragen</h3></body></html>");
 		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugefuegt!");
@@ -121,16 +124,35 @@ public class MIGLayout {
 		final JButton neuesZielB1 = new JButton("Neues Ziel");
 		final PositiveDecimalField neuesZielTF1 = new PositiveDecimalField();
 		final JLabel zielL2 = new JLabel("Trage dein neues Ziel in min/km ein!");
+		JLabel erklaerungen1 = new JLabel(
+				"Lockerer Dauerlauf: Entspannter Lauf, man sollte beim Laufen noch ein Gespräch führen können");
+		JLabel erklaerungen2 = new JLabel(
+				"Intervall: schnell: 90 bis 100 Prozent des möglichen Tempos, langsam: schneller als lockerer Dauerlauf");
+		JLabel erklaerungen3 = new JLabel("Fartlek: Pyramidenläufe");
+		JLabel erklaerungen4 = new JLabel(
+				"In and Outs: Läufe auf der 400 Meter Bahn, 50 Meter langsam, 50 Meter schnell");
+		JLabel erklaerungen5 = new JLabel("Dehnen: Nach dem Einlaufen auf jeden Fall dehnen");
+		JLabel erklaerungen6 = new JLabel("Stabis: Regelmäßig Stabilisationsübungen durchführen");
+		JLabel erklaerungen7 = new JLabel("Kraft: Regelmäßig Kraftübungen durvhführen");
 
-		JButton letzteEintraege = new JButton("letzten Lauf laden");
-		
-		final JLabel zielErreicht = new JLabel ("Das Ziel wurde erreciht! Herzlichen Glueckwunsch!");
+		final JLabel zielErreicht = new JLabel("Das Ziel wurde erreciht! Herzlichen Glueckwunsch!");
 		zielErreicht.setForeground(Color.red);
+		JLabel vorschlaege0 = new JLabel(
+				"Bitte tragen Sie die Werte ein, um einen Lauf Vorschlag für Ihren heutigen Lauf zu erhalten!");
+		JLabel vorschlaege1 = new JLabel("Wie viele Stunden haben Sie geschlafen?");
+		JLabel vorschlaege2 = new JLabel("Wie fühlen Sie sich auf einer Skala von 1 - 10?");
+		final PositiveDecimalField tfVorschlaege1 = new PositiveDecimalField();
+		final PositiveDecimalField tfVorschlaege2 = new PositiveDecimalField();
+		JButton btVorschlaege1 = new JButton("Vorschlag anzeigen");
+		final JLabel vorschlaege3 = new JLabel("");
 
+		JLabel letzteTitel = new JLabel ("ID|Kilometer|Zeit|Strecke|Datum|pace");
 		/**
 		 * Hinzufügen der Label zu den einzelnen Panels
 		 */
+		
 		panLetzteEintraege.add(labelLetzteEintraege, "center, wrap");
+		panLetzteEintraege.add(letzteTitel, "center, wrap");
 		panZeit.add(labelZeit);
 		panNeuerEintrag.add(labelneuerEintrag, "center, wrap");
 		panNeuerEintrag.add(neuerEintragL1, "center, wrap");
@@ -142,10 +164,24 @@ public class MIGLayout {
 		panZiel.add(labelZiel, "center, wrap");
 		panZiel.add(zielL1, "center, wrap");
 		panZiel.add(neuesZielB1, "center, wrap");
-		panVorschlaege.add(labelVorschlaege);
+		panVorschlaegeFragen.add(labelVorschlaege, "center, wrap");
 		panLetzteEintraege.add(laeufe1, "center, wrap");
-		panZeit.add(createChartPanel(), "w 100%, h 60sp, span 3");
-
+		panZeit.add(DiagramErstellen(), "w 100%, h 60sp, span 3");
+		panErklaerungen.add(labelErklaerungen, "center, wrap");
+		panErklaerungen.add(erklaerungen1, "center, wrap");
+		panErklaerungen.add(erklaerungen2, "center, wrap");
+		panErklaerungen.add(erklaerungen3, "center, wrap");
+		panErklaerungen.add(erklaerungen4, "center, wrap");
+		panErklaerungen.add(erklaerungen5, "center, wrap");
+		panErklaerungen.add(erklaerungen6, "center, wrap");
+		panErklaerungen.add(erklaerungen7, "center, wrap");
+		panVorschlaegeFragen.add(vorschlaege0, "center, wrap");
+		panVorschlaegeFragen.add(vorschlaege1, "center, wrap");
+		panVorschlaegeFragen.add(tfVorschlaege1, "center, wrap");
+		panVorschlaegeFragen.add(vorschlaege2, "center, wrap");
+		panVorschlaegeFragen.add(tfVorschlaege2, "center, wrap");
+		panVorschlaegeFragen.add(btVorschlaege1, "center, wrap");
+		panVorschlaegeFragen.add(vorschlaege3, "center, wrap");
 
 		/**
 		 * Hinzufügen der Panel zum Hauptpanel
@@ -155,6 +191,8 @@ public class MIGLayout {
 		panel.add(panNeuerEintrag, "w 25sp, h 20sp, dock east");
 		panel.add(panZeit, "w 50sp, h 60sp, dock north");
 		panel.add(panZiel, "w 50sp, h 30sp, dock north, dock south");
+		panVorschlaege.add(panErklaerungen, "w 50sp, h 100sp, dock east");
+		panVorschlaege.add(panVorschlaegeFragen, "w 50sp, h 100sp, dock west");
 
 		/**
 		 * Hintergrundfarbe der Panel anpassen
@@ -164,6 +202,8 @@ public class MIGLayout {
 		panNeuerEintrag.setBackground(Color.white);
 		panZiel.setBackground(Color.white);
 		panVorschlaege.setBackground(Color.white);
+		panErklaerungen.setBackground(Color.white);
+		panVorschlaegeFragen.setBackground(Color.white);
 
 		/**
 		 * Hinzufügen des Hauptpanels zum frame
@@ -177,6 +217,25 @@ public class MIGLayout {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
+		btVorschlaege1.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						double schlaf = (Double.parseDouble(tfVorschlaege1.getText()));
+						double energie = (Double.parseDouble(tfVorschlaege2.getText()));
+						double energieWert = ((int) ((schlaf + energie) + 0.5));
+				
+						String vorschlag = DatenbankVerbindung.laufVorschlagen(energieWert);
+						vorschlaege3.setText (vorschlag);
+						
+
+					}
+				});
+			}
+		});
+
 		/**
 		 * Action listener zum eintargen eines neuen Laufes
 		 */
@@ -187,17 +246,22 @@ public class MIGLayout {
 						double kilometer = (Double.parseDouble(neuerEintragTF1.getText()));
 						double zeit = (Double.parseDouble(neuerEintragTF2.getText()));
 						DatenbankVerbindung.insertLetzterLaufInDatabase(kilometer, zeit);
+						DatenbankVerbindung.verbinden();
 						laeufe1.getParent().removeAll();
 						/**
 						 * hinzufügen der Daten zur Datenbank
 						 */
 						JLabel neuerEintragPace = new JLabel("Deine pace lautet: " + zeit / kilometer + " min/km");
 						panNeuerEintrag.add(neuerEintragPace, "center, wrap");
+						DiagramErstellen();
 						neuerEintragTF1.setText(null);
-						neuerEintragTF2.setText(null);
-						DatenbankVerbindung.verbinden();
+						neuerEintragTF2.setText(" ");
+						neuerEintragTF1.revalidate();
+						neuerEintragTF1.repaint();
+						
+
 						panNeuerEintrag.revalidate();
-						if ((zeit / kilometer)<=zielpace) {
+						if ((zeit / kilometer) <= zielpace) {
 							panZiel.add(zielErreicht);
 						}
 
@@ -206,16 +270,6 @@ public class MIGLayout {
 			}
 		});
 
-		/**
-		 * Action listener zum anzeigen der letzten Läufe
-		 */
-		letzteEintraege.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		});
 		/**
 		 * Action Listener zum eintragen eines neuen Ziels
 		 */
@@ -256,14 +310,15 @@ public class MIGLayout {
 	}
 
 	public static void LetzteLaufe(String eintrag) {
-	    if (letzteEintraege == null) {
-	        letzteEintraege = "";
-	    } else {
-	        letzteEintraege += "<br>";
-	    }
-	    letzteEintraege += eintrag;
-
-	    laeufe1.setText("<html><body>" + letzteEintraege + "</body></html>");
+		
+		if (letzteEintraege == null) {
+			letzteEintraege = "";
+		} else {
+			letzteEintraege += "<br>";
+		}
+		letzteEintraege += eintrag;
+		
+		laeufe1.setText("<html><body>" + letzteEintraege + "</body></html>");
 	}
 
 	/**
@@ -295,48 +350,40 @@ public class MIGLayout {
 		zielpace = ziel;
 
 	}
-	
-private static final String DB_URL =  "jdbc:ucanaccess://C:\\Users\\Ann\\Desktop\\GIT\\GFSLaufplaner\\GITLaufplaner\\LaufplanerDatabase.accdb";
-    
-  
 
-    private JPanel createChartPanel() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	private JPanel DiagramErstellen() {
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        try (Connection connection = DriverManager.getConnection(DB_URL)) {
-            String sql = "SELECT * FROM Eintraege ORDER BY IdLauf DESC LIMIT 15;";
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(sql);
+		try (Connection connection = DriverManager.getConnection(URL)) {
+			String sql = "SELECT * FROM Eintraege ORDER BY IdLauf ASC LIMIT 15;";
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
 
-            while (result.next()) {
-                int id = result.getInt("IdLauf");
-                double km = result.getDouble("Kilometer");
-                double zeit = result.getDouble("Zeit");
-                Date datum = result.getDate("Datum");
-                double pace = zeit / km;
+			while (result.next()) {
+				int id = result.getInt("IdLauf");
+				double km = result.getDouble("Kilometer");
+				double zeit = result.getDouble("Zeit");
+				Date datum = result.getDate("Datum");
+				double pace = zeit / km;
 
-                dataset.addValue(pace, "Pace (min/km)", datum.toLocalDate().toString());
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+				dataset.addValue(pace, "Pace (min/km)", datum.toLocalDate().toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-        JFreeChart chart = ChartFactory.createLineChart(
-                "Letzte Läufe", "Datum", "Pace (min/km)", dataset,
-                PlotOrientation.VERTICAL, false, true, false);
+		JFreeChart chart = ChartFactory.createLineChart("Letzte Läufe", "Datum", "Pace (min/km)", dataset,
+				PlotOrientation.VERTICAL, false, true, false);
 
-        chart.setBackgroundPaint(Color.WHITE);
+		chart.setBackgroundPaint(Color.WHITE);
 
-        CategoryPlot plot = chart.getCategoryPlot();
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setRangeGridlinePaint(Color.BLACK);
+		CategoryPlot plot = chart.getCategoryPlot();
+		plot.setBackgroundPaint(Color.WHITE);
+		plot.setRangeGridlinePaint(Color.BLACK);
 
-        ChartPanel chartPanel = new ChartPanel(chart);
-       
-       
-        return chartPanel;
-    }
+		ChartPanel chartPanel = new ChartPanel(chart);
 
- 
+		return chartPanel;
+	}
+
 }
-
