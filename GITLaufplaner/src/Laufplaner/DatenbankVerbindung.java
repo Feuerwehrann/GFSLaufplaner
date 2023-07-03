@@ -154,36 +154,38 @@ public class DatenbankVerbindung implements Variablen {
 
 	public static void insertLetzterLaufInDatabase(double km, double zeit) {
 
-		Connection connection = null;
-		PreparedStatement pstmt = null;
-		try {
-			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-			connection = DriverManager.getConnection(URL);
+	    Connection connection = null;
+	    PreparedStatement pstmt = null;
+	    try {
+	        Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+	        connection = DriverManager.getConnection(URL);
 
-			LocalDate currentDate = LocalDate.now();
-			java.sql.Date date = java.sql.Date.valueOf(currentDate);
+	        LocalDate currentDate = LocalDate.now();
+	        java.sql.Date date = java.sql.Date.valueOf(currentDate);
 
-			pstmt = connection.prepareStatement("INSERT INTO Eintraege (Kilometer, Zeit, Datum) VALUES (?, ?, ?)");
-			pstmt.setDouble(1, km);
-			pstmt.setDouble(2, zeit);
-			pstmt.setDate(3, date);
+	        pstmt = connection.prepareStatement("INSERT INTO Eintraege (Kilometer, Zeit, Datum) VALUES (?, ?, ?)");
+	        pstmt.setDouble(1, km);
+	        pstmt.setDouble(2, zeit);
+	        pstmt.setDate(3, date);
 
-		
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	        pstmt.executeUpdate();
+
+	    } catch (ClassNotFoundException | SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (pstmt != null) {
+	                pstmt.close();
+	            }
+	            if (connection != null) {
+	                connection.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
+
 	/**
 	 * Methode zum Bestimmen des jewiligen Vorschlags
 	 * Es wir der Energiewert genutzt. Dies ist eine Kombination aus dem Schlaf und wie man sich fuehlt
