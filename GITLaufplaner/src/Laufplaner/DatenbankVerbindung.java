@@ -1,5 +1,8 @@
 package Laufplaner;
 
+/**
+ * Import der Bibliotehekn
+ */
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -17,6 +20,9 @@ import java.time.LocalDate;
  */
 
 public class DatenbankVerbindung implements Variablen {
+	/**
+	 * Array zum Speichern der Vorschlaege
+	 */
 	public static String vorschlaegeArray[] = new String[30];
 
 	/**
@@ -28,7 +34,7 @@ public class DatenbankVerbindung implements Variablen {
 
 		try {
 			/**
-			 * Verbindung zur Datenbakn herstellen
+			 * Verbindung zur Datenbank herstellen
 			 */
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 
@@ -39,11 +45,16 @@ public class DatenbankVerbindung implements Variablen {
 			connection = DriverManager.getConnection(URL);
 
 			/**
-			 * Auslesen der Daten aus der Tabelle "Einträge" und ausgeben aller Daten
+			 * Auslesen der Daten aus der Tabelle "Eintraege" und ausgeben aller Daten
 			 */
 			String sql = "SELECT * FROM Eintraege";
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
+
+			/**
+			 * Waehrend es neue Ergebnisse gibt, sollen diese in Variablen eingetragen
+			 * werden und in der Klasse MigLayout auf der GUI ausgegeben werden
+			 */
 
 			while (result.next()) {
 				int id = result.getInt("IdLauf");
@@ -52,32 +63,41 @@ public class DatenbankVerbindung implements Variablen {
 				Date datum = result.getDate("Datum");
 				double pace = zeit / km;
 				MIGLayout.ausgabeLetzteLaufe(id, km, zeit, datum, pace);
-				System.out.println(id + ", " + km + ", " + zeit + ", " + datum + ", " + pace);
 
 			}
+
+			/**
+			 * Auslesen der Daten aus der Tabelle "Vorschlaege"
+			 */
 			String sqlVorschlag = "SELECT * FROM Vorschlaege";
 			Statement statementVorschlag = connection.createStatement();
 			ResultSet resultVorschlag = statementVorschlag.executeQuery(sqlVorschlag);
 
+			/**
+			 * Daten aus der Tabelle Vorschlaege werden in einem Array gespeichert
+			 */
+
 			while (resultVorschlag.next()) {
 				int idVorschlaege = resultVorschlag.getInt("ID");
 				String beschreibungVorschlag = resultVorschlag.getString("Beschreibung");
+				/**
+				 * Array mit Beschreibungen der Energielevel
+				 */
 				vorschlaegeArray[idVorschlaege] = beschreibungVorschlag;
 
 			}
-			for (int i = 1; i < 22; i++) {
-				System.out.println(vorschlaegeArray[i]);
-			}
-
-			System.out.println("--------------------");
 
 			/**
-			 * Auslesen der letzten 10 Daten aus der Tabelle "Einträge"
+			 * Auslesen aller letzten Daten aus der Tabelle "Eintraege"
 			 */
 			String sqlLetzte = "SELECT *  FROM Eintraege ORDER BY IdLauf DESC ;";
 			Statement statementLetzte = connection.createStatement();
 			ResultSet resultLetzte = statementLetzte.executeQuery(sqlLetzte);
-			
+
+			/**
+			 * Waehrend es neue Ergebnisse gibt, sollen diese mit einer Methode auf der GUI
+			 * ausgegeben werden
+			 */
 
 			while (resultLetzte.next()) {
 
@@ -86,15 +106,13 @@ public class DatenbankVerbindung implements Variablen {
 				double zeitLetzte = resultLetzte.getDouble("Zeit");
 				Date datumLetzte = resultLetzte.getDate("Datum");
 				double paceLetzte = zeitLetzte / kmLetzte;
-				letzteLaeufe = String.format("%d\t| %.2f\t| %.2f\t| %s\t| %.2f", idLetzte, kmLetzte, zeitLetzte,
-						datumLetzte, paceLetzte);
+				letzteLaeufe = String.format("%d\t| %.2f\t| %.2f\t| %s\t| %.2f", idLetzte, kmLetzte, zeitLetzte, datumLetzte, paceLetzte);
 				MIGLayout.LetzteLaufe(letzteLaeufe);
-				System.out.println(
-						idLetzte + ", " + kmLetzte + ", " + zeitLetzte + ", " + datumLetzte + ", " + paceLetzte);
+
 			}
 
 			/**
-			 * Auslesen der letzten Daten aus der Tabelle "Ziel"
+			 * Auslesen ders letzten Datensatz aus der Tabelle "Ziel"
 			 */
 			String sqlZiel = "SELECT * FROM Ziel";
 			Statement statementZiel = connection.createStatement();
@@ -128,7 +146,7 @@ public class DatenbankVerbindung implements Variablen {
 	}
 
 	/**
-	 * Methode zum Einfügen eines neuen Laufs in die Datenbank
+	 * Methode zum Einfuegen eines neuen Laufs in die Datenbank
 	 * 
 	 * @param km   gelaufene kilometer
 	 * @param zeit die benötigte Zeit
@@ -150,8 +168,7 @@ public class DatenbankVerbindung implements Variablen {
 			pstmt.setDouble(2, zeit);
 			pstmt.setDate(3, date);
 
-			int numRowsAffected = pstmt.executeUpdate();
-			System.out.println(numRowsAffected + " rows affected.");
+		
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -167,6 +184,12 @@ public class DatenbankVerbindung implements Variablen {
 			}
 		}
 	}
+	/**
+	 * Methode zum Bestimmen des jewiligen Vorschlags
+	 * Es wir der Energiewert genutzt. Dies ist eine Kombination aus dem Schlaf und wie man sich fuehlt
+	 * @param energieWert Kombination aus Schlaf und wie man sich fuehlt
+	 * @return Der Vorschlag wird zurueckgegeben. Dies ist die Beschreibung an der Stelle des Arrays des Energiewertes
+	 */
 
 	public static String laufVorschlagen(double energieWert) {
 		String Vorschlag = null;
@@ -176,7 +199,7 @@ public class DatenbankVerbindung implements Variablen {
 	}
 
 	/**
-	 * Methode zum einfügen eines Ziels in die Datenbank
+	 * Methode zum einfuegen eines Ziels in die Datenbank
 	 * 
 	 * @param ziel das eingestellte Ziel
 	 */

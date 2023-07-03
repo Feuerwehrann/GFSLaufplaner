@@ -1,1 +1,1 @@
-memberSearchIndex = [{"p":"Laufplaner","c":"Startklasse","l":"main(String[])","u":"main(java.lang.String[])"},{"p":"Laufplaner","c":"Startklasse","l":"Startklasse()","u":"%3Cinit%3E()"}];updateSearchResults();
+memberSearchIndex = [{"p":"Laufplaner","c":"Variablen","l":"URL"}];updateSearchResults();

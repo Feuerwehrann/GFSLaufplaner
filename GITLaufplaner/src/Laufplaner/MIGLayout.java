@@ -1,5 +1,8 @@
 package Laufplaner;
 
+/**
+ * Importieren von allen benoetigten Bibliotheken
+ */
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -24,9 +27,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-/**
- * Importieren von allen benötigten Bibliotheken
- */
 import java.awt.*;
 
 /**
@@ -38,7 +38,7 @@ import java.awt.*;
 
 public class MIGLayout implements Variablen {
 	/**
-	 * Initialisierung aller benötigten Variablen
+	 * Initialisierung aller benoetigten Variablen
 	 */
 	private static JLabel laeufe1 = new JLabel(" ");
 	public static String letzteEintraege;
@@ -50,7 +50,6 @@ public class MIGLayout implements Variablen {
 	static double laufpace;
 	static Date laufdatum;
 	static double zielpace;
-
 	private JFrame frame;
 
 	/**
@@ -96,18 +95,16 @@ public class MIGLayout implements Variablen {
 		panNeuerEintrag.setBorder(BorderFactory.createLineBorder(Color.black));
 		panZiel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panVorschlaege.setBorder(BorderFactory.createLineBorder(Color.black));
-
 		panLetzteEintraege.setSize(1500, 200);
 
 		/**
-		 * Erstellung der JLabels und JButtons und Beschriftung
+		 * Erstellung der JLabels, JButtons und TextFields
 		 */
 		final JLabel labelLetzteEintraege = new JLabel("<html><body><h1>Letzte Einträge</h1></body></html>");
 		JLabel labelZiel = new JLabel("<html><body><h1>Ziel</h1></body></html>");
 		JLabel labelneuerEintrag = new JLabel("<html><body><h1>neuer Eintrag<h1></body></html>");
 		JLabel labelVorschlaege = new JLabel("<html><body><h1>Vorschlaege</h1></body></html>");
 		JLabel labelErklaerungen = new JLabel("<html><body><h1>Erklaerungen</h1></body></html>");
-
 		JLabel neuerEintragL1 = new JLabel("Bitte tragen Sie Ihren Lauf von heute ein!");
 		JLabel neuerEintragL2 = new JLabel("<html><body><h3>gelaufene Strecke in Kilomter</h3></body></html>");
 		final PositiveDecimalField neuerEintragTF1 = new PositiveDecimalField();
@@ -144,7 +141,7 @@ public class MIGLayout implements Variablen {
 
 		final JLabel letzteTitel = new JLabel("ID | Kilometer | Zeit | Datum | pace");
 		/**
-		 * Hinzufügen der Label zu den einzelnen Panels
+		 * Hinzufuegen der Label zu den einzelnen Panels
 		 */
 
 		panLetzteEintraege.add(labelLetzteEintraege, "center, wrap");
@@ -181,7 +178,7 @@ public class MIGLayout implements Variablen {
 		panVorschlaegeFragen.add(vorschlaege3, "center, wrap");
 
 		/**
-		 * Hinzufügen der Panel zum Hauptpanel
+		 * Hinzufuegen der Panel zum Hauptpanel
 		 */
 		panel.add(panLetzteEintraege, "w 25sp, h 100sp, dock west");
 		panel.add(panVorschlaege, "w 25sp, h 60sp, dock east, dock south");
@@ -203,7 +200,7 @@ public class MIGLayout implements Variablen {
 		panVorschlaegeFragen.setBackground(Color.white);
 
 		/**
-		 * Hinzufügen des Hauptpanels zum frame
+		 * Hinzufuegen des Hauptpanels zum frame
 		 */
 		frame.add(panel, BorderLayout.CENTER);
 
@@ -213,6 +210,10 @@ public class MIGLayout implements Variablen {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		/**
+		 * Action Listener für den Button der Vorschlaege
+		 */
 
 		btVorschlaege1.addActionListener(new ActionListener() {
 
@@ -233,7 +234,7 @@ public class MIGLayout implements Variablen {
 		});
 
 		/**
-		 * Action listener zum eintargen eines neuen Laufes
+		 * Action listener zum eintrargen eines neuen Laufes
 		 */
 		neuerEintragB1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -245,7 +246,7 @@ public class MIGLayout implements Variablen {
 						DatenbankVerbindung.verbinden();
 						laeufe1.getParent().removeAll();
 						/**
-						 * hinzufügen der Daten zur Datenbank
+						 * hinzufuegen der Daten zur Datenbank
 						 */
 						JLabel neuerEintragPace = new JLabel("Deine pace lautet: " + zeit / kilometer + " min/km");
 						panNeuerEintrag.add(neuerEintragPace, "center, wrap");
@@ -313,6 +314,12 @@ public class MIGLayout implements Variablen {
 		});
 
 	}
+	
+	/**
+	 * Methode zum Eintragen der letzten Laeufe. 
+	 * Diese werden mit Hilfe von HTML alle in ein JPanel geschrieben
+	 * @param eintrag aktueller Lauf
+	 */
 
 	public static void LetzteLaufe(String eintrag) {
 
@@ -327,7 +334,7 @@ public class MIGLayout implements Variablen {
 	}
 
 	/**
-	 * Methode zum uebergeben der Daten der letzten Läufe
+	 * Methode zum uebergeben der Daten der letzten Laeufe
 	 * 
 	 * @param id    id des Laufes
 	 * @param km    kilometer des Laufes
@@ -355,63 +362,80 @@ public class MIGLayout implements Variablen {
 		zielpace = ziel;
 
 	}
-
+	/**
+	 * Methode zum erstellen eines Diagramms
+	 * @return Das Diagramm wird zurückgegeben
+	 */
 	public JComponent DiagramErstellen() {
-	    TimeSeriesCollection dataset = new TimeSeriesCollection();
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
 
-	    try {
-	        Connection conn = DriverManager.getConnection(URL);
-	        String query = "SELECT TOP 10 * FROM Eintraege ORDER BY Datum DESC;";
-	        Statement stmt = conn.createStatement();
-	        ResultSet rs = stmt.executeQuery(query);
+		try {
+			Connection conn = DriverManager.getConnection(URL);
+			/**
+			 * Die letzten 10 Datensaetze sollen angezeigt werden
+			 */
+			String query = "SELECT TOP 10 * FROM Eintraege ORDER BY Datum DESC;";
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
 
-	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	        TimeSeries paceSeries = new TimeSeries("Pace");
-	        TimeSeries distanceSeries = new TimeSeries("Strecke");
+			TimeSeries paceSeries = new TimeSeries("Pace");
+			TimeSeries distanceSeries = new TimeSeries("Strecke");
+			
+			/**
+			 * Daten aus der Datenbank werden abgespeichert
+			 */
 
-	        while (rs.next()) {
-	            double km = rs.getDouble("Kilometer");
-	            double zeit = rs.getDouble("Zeit");
-	            String dateString = rs.getString("Datum");
-	            java.util.Date date = dateFormat.parse(dateString);
-	            double pace = zeit / km;
-	            Day day = new Day(date);
-	            System.out.println("Datum: " + dateString + ", Pace: " + pace + ", Strecke: " + km);
-	            paceSeries.addOrUpdate(day, pace);
-	            distanceSeries.addOrUpdate(day, km);
-	        }
+			while (rs.next()) {
+				double km = rs.getDouble("Kilometer");
+				double zeit = rs.getDouble("Zeit");
+				String dateString = rs.getString("Datum");
+				java.util.Date date = dateFormat.parse(dateString);
+				double pace = zeit / km;
+				Day day = new Day(date);
+				System.out.println("Datum: " + dateString + ", Pace: " + pace + ", Strecke: " + km);
+				paceSeries.addOrUpdate(day, pace);
+				distanceSeries.addOrUpdate(day, km);
+			}
 
-	        dataset.addSeries(paceSeries);
-	        dataset.addSeries(distanceSeries);
+			dataset.addSeries(paceSeries);
+			dataset.addSeries(distanceSeries);
+			
+			/**
+			 * Datenbank Verbindung wird geschlossen
+			 */
 
-	        rs.close();
-	        stmt.close();
-	        conn.close();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		/**
+		 * Diagramm wird formatiert
+		 */
 
-	    JFreeChart chart = ChartFactory.createTimeSeriesChart("Pace- und Streckenverlauf", "Datum",
-	            "Pace (Min/km) / Strecke (km)", dataset, true, true, false);
-	    XYPlot plot = (XYPlot) chart.getPlot();
-	    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-	    renderer.setSeriesPaint(0, Color.RED);
-	    renderer.setSeriesPaint(1, Color.BLUE);
-	    renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-	    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
-	    renderer.setSeriesLinesVisible(0, true);
-	    renderer.setSeriesLinesVisible(1, true);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("Pace- und Streckenverlauf", "Datum",
+				"Pace (Min/km) / Strecke (km)", dataset, true, true, false);
+		XYPlot plot = (XYPlot) chart.getPlot();
+		XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+		renderer.setSeriesPaint(0, Color.RED);
+		renderer.setSeriesPaint(1, Color.BLUE);
+		renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+		renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+		renderer.setSeriesLinesVisible(0, true);
+		renderer.setSeriesLinesVisible(1, true);
 
-	    plot.setRenderer(renderer);
+		plot.setRenderer(renderer);
 
-	    DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
-	    dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
-	    NumberAxis paceAxis = (NumberAxis) plot.getRangeAxis();
-	    paceAxis.setAutoRangeIncludesZero(false);
+		DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
+		dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MMM-yyyy"));
+		NumberAxis paceAxis = (NumberAxis) plot.getRangeAxis();
+		paceAxis.setAutoRangeIncludesZero(false);
 
-	    ChartPanel chartPanel = new ChartPanel(chart);
-	    return chartPanel;
+		ChartPanel chartPanel = new ChartPanel(chart);
+		return chartPanel;
 	}
 
 }
