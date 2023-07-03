@@ -22,11 +22,17 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.*;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.*;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.*;
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +85,7 @@ public class MIGLayout implements Variablen {
 		 * Erstellung des Haupt-Panels mit dem MigLayout
 		 */
 		JPanel panel = new JPanel(new MigLayout());
-		MigLayout layout = new MigLayout("wrap 3");
+
 
 		/**
 		 * Erstellung der einzelnen Panels mit JLabels
@@ -107,7 +113,6 @@ public class MIGLayout implements Variablen {
 		 * Erstellung der JLabels und JButtons und Beschriftung
 		 */
 		JLabel labelLetzteEintraege = new JLabel("<html><body><h1>Letzte Einträge</h1></body></html>");
-		JLabel labelZeit = new JLabel("Zeit");
 		JLabel labelZiel = new JLabel("<html><body><h1>Ziel</h1></body></html>");
 		JLabel labelneuerEintrag = new JLabel("<html><body><h1>neuer Eintrag<h1></body></html>");
 		JLabel labelVorschlaege = new JLabel("<html><body><h1>Vorschlaege</h1></body></html>");
@@ -119,7 +124,6 @@ public class MIGLayout implements Variablen {
 		JLabel neuerEintragL3 = new JLabel("<html><body><h3>benoetigte Zeit in Minuten</h3></body></html>");
 		final PositiveDecimalField neuerEintragTF2 = new PositiveDecimalField();
 		JButton neuerEintragB1 = new JButton("<html><body><h3>eintragen</h3></body></html>");
-		JLabel neuerEintragL4 = new JLabel("Daten wurden hinzugefuegt!");
 		final JLabel zielL1 = new JLabel("Dein aktuelles Ziel lautet " + zielpace + " min/km");
 		final JButton neuesZielB1 = new JButton("Neues Ziel");
 		final PositiveDecimalField neuesZielTF1 = new PositiveDecimalField();
@@ -135,7 +139,7 @@ public class MIGLayout implements Variablen {
 		JLabel erklaerungen6 = new JLabel("Stabis: Regelmäßig Stabilisationsübungen durchführen");
 		JLabel erklaerungen7 = new JLabel("Kraft: Regelmäßig Kraftübungen durvhführen");
 
-		final JLabel zielErreicht = new JLabel("Das Ziel wurde erreciht! Herzlichen Glueckwunsch!");
+		final JLabel zielErreicht = new JLabel("Das Ziel wurde erreicht! Herzlichen Glueckwunsch!");
 		zielErreicht.setForeground(Color.red);
 		JLabel vorschlaege0 = new JLabel(
 				"Bitte tragen Sie die Werte ein, um einen Lauf Vorschlag für Ihren heutigen Lauf zu erhalten!");
@@ -153,7 +157,6 @@ public class MIGLayout implements Variablen {
 		
 		panLetzteEintraege.add(labelLetzteEintraege, "center, wrap");
 		panLetzteEintraege.add(letzteTitel, "center, wrap");
-		panZeit.add(labelZeit);
 		panNeuerEintrag.add(labelneuerEintrag, "center, wrap");
 		panNeuerEintrag.add(neuerEintragL1, "center, wrap");
 		panNeuerEintrag.add(neuerEintragL2, "center, wrap");
@@ -351,39 +354,77 @@ public class MIGLayout implements Variablen {
 
 	}
 
-	private JPanel DiagramErstellen() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	public JComponent DiagramErstellen() {
+	    // Erstellung der Zeitreihen-Dataset
+	    TimeSeriesCollection dataset = new TimeSeriesCollection();
 
-		try (Connection connection = DriverManager.getConnection(URL)) {
-			String sql = "SELECT * FROM Eintraege ORDER BY IdLauf ASC LIMIT 15;";
-			Statement statement = connection.createStatement();
-			ResultSet result = statement.executeQuery(sql);
+	    try {
+	        // Verbindung zur Access-Datenbank herstellen
+	       
+	        Connection conn = DriverManager.getConnection(URL);
 
-			while (result.next()) {
-				int id = result.getInt("IdLauf");
-				double km = result.getDouble("Kilometer");
-				double zeit = result.getDouble("Zeit");
-				Date datum = result.getDate("Datum");
-				double pace = zeit / km;
+	        // SQL-Abfrage ausführen, um die Einträge abzurufen
+	        String query = "SELECT * FROM Eintraege";
+	        Statement stmt = conn.createStatement();
+	        ResultSet rs = stmt.executeQuery(query);
 
-				dataset.addValue(pace, "Pace (min/km)", datum.toLocalDate().toString());
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	        // Zeitformat für die Achse
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-		JFreeChart chart = ChartFactory.createLineChart("Letzte Läufe", "Datum", "Pace (min/km)", dataset,
-				PlotOrientation.VERTICAL, false, true, false);
+	        // Erstellung der Zeitreihe für den Pace
+	        TimeSeries paceSeries = new TimeSeries("Pace");
 
-		chart.setBackgroundPaint(Color.WHITE);
+	        // Erstellung der Zeitreihe für die Strecke
+	        TimeSeries distanceSeries = new TimeSeries("Strecke");
 
-		CategoryPlot plot = chart.getCategoryPlot();
-		plot.setBackgroundPaint(Color.WHITE);
-		plot.setRangeGridlinePaint(Color.BLACK);
+	        // Daten aus der Abfrage dem Dataset hinzufügen
+	        while (rs.next()) {
+	            double km = rs.getDouble("Kilometer");
+	            double zeit = rs.getDouble("Zeit");
+	            String dateString = rs.getString("Datum");
+	            java.util.Date date = dateFormat.parse(dateString);
+	            double pace = zeit / km;
+	            Day day = new Day(date);
+	            
+	            paceSeries.addOrUpdate(day, pace);
+	            distanceSeries.addOrUpdate(day, km);
+	        }
 
-		ChartPanel chartPanel = new ChartPanel(chart);
+	        // Hinzufügen der Zeitreihen zum Dataset
+	        dataset.addSeries(paceSeries);
+	        dataset.addSeries(distanceSeries);
 
-		return chartPanel;
+	        // Verbindung schließen
+	        rs.close();
+	        stmt.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    // Erstellung des Diagramms
+	    JFreeChart chart = ChartFactory.createTimeSeriesChart(
+	            "Pace- und Streckenverlauf",
+	            "Datum",
+	            "Pace (Min/km) / Strecke (km)",
+	            dataset,
+	            true,
+	            true,
+	            false
+	    );
+
+	    // Anpassung der Achsen
+	    XYPlot plot = (XYPlot) chart.getPlot();
+	    DateAxis dateAxis = (DateAxis) plot.getDomainAxis();
+	    dateAxis.setDateFormatOverride(new SimpleDateFormat("MMM-yyyy"));
+	    NumberAxis paceAxis = (NumberAxis) plot.getRangeAxis();
+	    paceAxis.setAutoRangeIncludesZero(false);
+
+	    // Erstellung des ChartPanels zur Anzeige des Diagramms
+	    ChartPanel chartPanel = new ChartPanel(chart);
+
+	    return chartPanel;
 	}
+
 
 }
