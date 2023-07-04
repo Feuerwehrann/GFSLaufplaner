@@ -121,7 +121,6 @@ public class DatenbankVerbindung implements Variablen {
 			while (resultZiel.next()) {
 				int idZiel = resultZiel.getInt("IdZiel");
 				double ziel = resultZiel.getDouble("Zielpace");
-				System.out.println(idZiel + ", " + ziel);
 				MIGLayout.ausgabeZiel(ziel);
 
 			}

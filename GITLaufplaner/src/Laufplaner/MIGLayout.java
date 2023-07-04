@@ -294,6 +294,9 @@ public class MIGLayout implements Variablen {
 						if (clickZiel == 2) {
 							ziel = (Double.parseDouble(neuesZielTF1.getText()));
 							DatenbankVerbindung.insertZielInDatabase(ziel);
+
+							laeufe1.setText(null);
+							letzteEintraege = " ";
 							DatenbankVerbindung.verbinden();
 
 							zielL1.setText("Dein aktuelles Ziel lautet " + zielpace + " min/km");
@@ -394,7 +397,6 @@ public class MIGLayout implements Variablen {
 				java.util.Date date = dateFormat.parse(dateString);
 				double pace = zeit / km;
 				Day day = new Day(date);
-				System.out.println("Datum: " + dateString + ", Pace: " + pace + ", Strecke: " + km);
 				paceSeries.addOrUpdate(day, pace);
 				distanceSeries.addOrUpdate(day, km);
 			}
